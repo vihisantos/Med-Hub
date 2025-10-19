@@ -1,0 +1,15 @@
+blanch feature/backend-signup-lgpd
+blanch main
+
+caminho pasta: med-hub-web/shift-manager-backend
+
+codigo: git checkout ( ou switch) f..."continua"
+
+*/ DATABASE_URL=postgresql://vihisantos:631330@localhost:5432/medhubdb?schema=public
+JWT_SECRET=Koda54#2#@
+
+*/ docker run -d --name medhub-postgres -p 5432:5432 \
+  -e POSTGRES_USER=medhubuser \
+  -e POSTGRES_PASSWORD=senha123 \
+  -e POSTGRES_DB=medhubdb \
+  postgres:15

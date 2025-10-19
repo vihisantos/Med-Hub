@@ -1,0 +1,219 @@
+/* Reset básico e layout da página */
+body,
+html,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #244d44; /* verde escuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Container principal login lado a lado */
+.login-container {
+  display: flex;
+  width: 900px;
+  max-width: 90vw;
+  height: 600px;
+  box-shadow: 0 12px 48px rgb(0 0 0 / 0.35);
+  border-radius: 1.5rem;
+  background: linear-gradient(
+    135deg,
+    #244d44 0%,
+    #2f6d5d 50%,
+    #3f9374 100%
+  );
+  overflow: hidden;
+}
+
+/* Painel esquerdo com imagem */
+.login-image-side {
+  flex: 1.4;
+  background: white;
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+/* Imagem dentro do lado esquerdo */
+.login-image-side img {
+  max-width: 80%;
+  height: auto;
+  z-index: 10;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Painel direito formulário */
+.login-form-side {
+  flex: 1;
+  padding: 3rem 3rem 3rem 2rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-form-side h2 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  letter-spacing: 0.03em;
+}
+
+.login-form-side label {
+  font-size: 0.875rem;
+  margin-bottom: 0.3rem;
+  display: block;
+  font-weight: 600;
+}
+
+/* Inputs */
+.login-form-side input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border-radius: 1rem;
+  border: none;
+  margin-bottom: 1.5rem;
+  background-color: #1c3c34;
+  color: #c7d7cd;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.25);
+}
+
+.login-form-side input::placeholder {
+  color: #829f8d;
+}
+
+.login-form-side input:focus {
+  outline: none;
+  box-shadow: 0 0 6px 2px #83b993;
+  background-color: #2a594a;
+  color: #ebf0e1;
+}
+
+/* Link esqueci senha */
+.forgot-password-link {
+  display: inline-block;
+  margin-top: 0.3rem; /* reduzir ou aumentar se quiser */
+  margin-right: auto;
+  color: #a7c6b6;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.forgot-password-link:hover {
+  color: #d3e7d4;
+}
+
+/* Botão Entrar */
+.login-button {
+  margin-top: 0px;
+  margin-left: 20px;
+  margin-right: auto; 
+  padding: 0.80rem 0;
+  background-color: #83b993;
+  border: none;
+  border-radius: 1.2rem;
+  font-weight: 600;
+  font-size: 1.0rem;
+  color: #1c3c34;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 5px 10px rgb(131 185 147 / 0.7);
+}
+
+.login-button:hover {
+  background-color: #6ba271;
+  box-shadow: 0 6px 14px rgb(107 162 113 / 0.9);
+}
+
+/* Link adicional */
+.login-form-side a {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #a7c6b6;
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: color 0.25s ease;
+}
+
+.login-form-side a:hover {
+  color: #d3e7d4;
+}
+
+/* Textos pequenos rodapé */
+.login-small-text {
+  font-size: 0.75rem;
+  color: #7c9a86;
+  margin-top: auto;
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+    width: 95vw;
+  }
+  .login-image-side {
+    border-radius: 1.5rem 1.5rem 0 0;
+    flex: none;
+    padding: 2rem 0;
+  }
+  .login-form-side {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Bolhas animadas */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: #244d44;
+  animation: float 6s ease-in-out infinite;
+  opacity: 0.9;
+}
+.bubble--small {
+  width: 40px;
+  height: 40px;
+  bottom: 40px;
+  left: 30px;
+  animation-delay: 0s;
+}
+.bubble--medium {
+  width: 60px;
+  height: 60px;
+  bottom: 80px;
+  left: 90px;
+  animation-delay: 2s;
+}
+.bubble--large {
+  width: 80px;
+  height: 80px;
+  bottom: 20px;
+  left: 150px;
+  animation-delay: 4s;
+}
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+}
