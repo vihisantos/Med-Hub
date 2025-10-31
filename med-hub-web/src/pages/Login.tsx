@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../style/login.css';
+import { Link } from 'react-router-dom';
 import MedicalIllustration from '../components/MedicalIllustration';
 
 export default function Login() {
@@ -45,19 +46,19 @@ export default function Login() {
             autoComplete="current-password"
           />
 
-          {/* Link “Esqueceu sua Senha?” com classe para controle de espaçamento */}
-          <a href="/forgot-password.tsx" tabIndex={0} className="forgot-password-link">
+          {/* Link “Esqueceu sua Senha?”: usar Link do react-router para navegação SPA */}
+          <Link to="/forgot-password" className="forgot-password-link">
             Esqueceu sua Senha?
-          </a>
+          </Link>
 
           {/* Botão "Entrar" com margem para ficar abaixo do link */}
           <button type="submit" aria-label="Login" className="login-button">
              .         Entrar            .   
           </button>
 
-          <a href="/register" tabIndex={0} style={{ marginTop: '1rem', display: 'inline-block' }}>
+          <Link to="/register" tabIndex={0} style={{ marginTop: '1rem', display: 'inline-block' }}>
             Ainda não faz parte? <span style={{ color: '#83b993' }}> Registre-se Já </span>
-          </a>
+          </Link>
 
           <p className="login-small-text">
             Registre-se e aceite nossos Termos e Serviços.

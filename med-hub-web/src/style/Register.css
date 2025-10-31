@@ -1,0 +1,167 @@
+/* Paleta baseada nos verdes do projeto */
+:root{
+  --green-100: #e6f7ee;
+  --green-200: #dff3e6;
+  --green-300: #cfead8;
+  --green-500: #6fbf8b;
+  --green-700: #2f7f4f;
+  --bg: #ffffff;
+}
+
+/* Layout geral: dois painéis lado a lado */
+.register-page{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  font-family: Inter, Roboto, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial;
+}
+
+.register-left{
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.register-left__content{
+  max-width: 28rem;
+  text-align: left;
+}
+
+.logo{
+  font-size: 2.25rem;
+  color: var(--green-700);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.5px;
+}
+
+.tagline{
+  color: #4d6b54;
+  margin-bottom: 2rem;
+}
+
+.bubbles{
+  width: 220px;
+  height: auto;
+  margin-top: 1.5rem;
+}
+
+.bubble{
+  transform-origin: center;
+  animation: float 6s ease-in-out infinite;
+  opacity: 0.95;
+}
+.bubble--1{ animation-delay: 0s; }
+.bubble--2{ animation-delay: 1s; }
+.bubble--3{ animation-delay: 2s; }
+
+@keyframes float{
+  0%{ transform: translateY(0) scale(1); }
+  50%{ transform: translateY(-10px) scale(1.02); }
+  100%{ transform: translateY(0) scale(1); }
+}
+
+.register-right{
+  background: linear-gradient(180deg, var(--green-300), var(--green-200));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+}
+
+.register-form{
+  background: white;
+  padding: 2rem;
+  width: 100%;
+  max-width: 28rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(47,127,79,0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.register-form h2{
+  margin: 0 0 1rem 0;
+  color: var(--green-700);
+}
+
+.register-form label{
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: #2f4f3f;
+}
+
+/* Toggle role (Médico / Hospital) */
+.role-fieldset{ border: none; margin: 0 0 0.5rem 0; padding: 0; }
+.role-toggle{ display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.role-option{
+  background: #f6fbf7;
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  font-weight: 600;
+  color: var(--green-700);
+}
+.role-option input{ display: none; }
+.role-option.active{ background: var(--green-500); color: white; box-shadow: 0 6px 16px rgba(47,127,79,0.12); }
+
+
+.input{
+  margin-top: 0.35rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid #e6efe7;
+  outline: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.input:focus{
+  box-shadow: 0 2px 0 rgba(47,127,79,0.12);
+  border-color: var(--green-700);
+}
+.input--error{
+  border-color: #ffb3b3;
+}
+
+.input-error{
+  color: #b00020;
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.actions{
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn-register{
+  background: var(--green-500);
+  color: white;
+  padding: 0.85rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(47,127,79,0.18);
+}
+.btn-register:focus{ outline: 2px solid rgba(47,127,79,0.18); }
+
+.already{
+  margin-top: 0.8rem;
+  color: #34573f;
+  font-size: 0.95rem;
+}
+.link-login{ color: var(--green-700); text-decoration: none; font-weight: 600; }
+
+/* Responsivo: empilhar em telas menores */
+@media (max-width: 900px){
+  .register-page{ grid-template-columns: 1fr; }
+  .register-left{ order: 1; padding: 2rem; }
+  .register-right{ order: 2; padding: 1.25rem; }
+  .register-form{ max-width: 100%; }
+}
