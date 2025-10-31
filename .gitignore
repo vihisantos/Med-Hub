@@ -1,0 +1,71 @@
+.DS_Store
+.env
+.env.*
+.env.local
+.env.production
+
+# Node
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite / build
+/dist/
+/build/
+med-hub-web/dist/
+
+# Logs
+.npmrc
+*.log
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Prisma
+**/prisma/dev.db
+**/prisma/*.db
+**/prisma/.env
+
+# Generic secrets
+/ssh-config
+/*.pem
+/*.key
+
+# Ignore build output and caches
+/.turbo
+/.parcel-cache
+/.next
+/.expo
+/.vercel
+
+# JetBrains
+.idea/
+
+# Coverage
+/coverage
+
+# Ignore local env in backend
+med-hub-web/shift-manager-backend/.env
+
+# Ignore generated Prisma client if present
+med-hub-web/shift-manager-backend/node_modules/
+med-hub-web/shift-manager-backend/node_modules/**
+
+# Ignore package lock if you prefer yarn/pnpm lock instead (OPTIONAL)
+# package-lock.json
