@@ -1,3 +1,43 @@
+# Node dependencies
+/node_modules/
+
+# Vite / build output
+/dist/
+/med-hub-web/dist/
+
+# Environment files
+.env
+.env.*
+
+# Ignore med-hub-web and backend generated/node files
+/med-hub-web/node_modules/
+/med-hub-web/shift-manager-backend/node_modules/
+/med-hub-web/shift-manager-backend/.env
+
+# Prisma client artifacts
+**/node_modules/.prisma/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Misc
+coverage/
+.env.local
+.cache/
 .DS_Store
 .env
 .env.*
