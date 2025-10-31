@@ -29,9 +29,12 @@ jobs:
         run: npm run build
         working-directory: ./med-hub-web
 
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: ./med-hub-web/dist
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./med-hub-web/dist
+          # optional: keep history of deployments
+          keep_files: false
 
   # The `deploy-pages` job is provided by GitHub; after the artifact is uploaded it will be deployed.
