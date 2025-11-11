@@ -1,275 +1,502 @@
-import React, { JSX, useState } from 'react';
+import React, { useState, JSX } from 'react';
 import { Link } from 'react-router-dom';
 import '../style/Register.css';
 
-// Componente funcional de registro de usuário com opção de role (Médico ou Hospital)
 export default function Register(): JSX.Element {
-  // Campos comuns
+  const [role, setRole] = useState<'doctor' | 'hospital'>('doctor');
+
+  // Médico
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-
-  // Role: 'doctor' ou 'hospital'
-  const [role, setRole] = useState<'doctor' | 'hospital'>('doctor');
-
-  // Campos específicos para médico
   const [crm, setCrm] = useState('');
   const [specialties, setSpecialties] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
-  // Campos específicos para hospital
-  const [hospitalName, setHospitalName] = useState('');
+  // Hospital
+  const [fantasyName, setFantasyName] = useState('');
+  const [institutionalEmail, setInstitutionalEmail] = useState('');
+  const [corporateName, setCorporateName] = useState('');
   const [cnpj, setCnpj] = useState('');
+  const [cnes, setCnes] = useState('');
   const [address, setAddress] = useState('');
+  const [institutionType, setInstitutionType] = useState<'public' | 'private'>('public');
 
-  // Estados de erro para exibir mensagens simples abaixo dos inputs
+  // Checkbox termos (médico e hospital)
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  // Erros
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Validação básica no submit, agora dependente do role
+  const resetForm = () => {
+    setFullName('');
+    setEmail('');
+    setPhone('');
+    setCrm('');
+    setSpecialties('');
+    setPassword('');
+    setPasswordConfirm('');
+    setFantasyName('');
+    setInstitutionalEmail('');
+    setCorporateName('');
+    setCnpj('');
+    setCnes('');
+    setAddress('');
+    setInstitutionType('public');
+    setTermsAccepted(false);
+    setErrors({});
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
-    // Campos comuns
-    if (!fullName.trim()) newErrors.fullName = 'Nome completo é obrigatório.';
-    if (!email.trim()) newErrors.email = 'E-mail é obrigatório.';
-    if (!phone.trim()) newErrors.phone = 'Telefone é obrigatório.';
-    if (!password.trim()) newErrors.password = 'Senha é obrigatória.';
-
-    // Validação condicional
     if (role === 'doctor') {
+      if (!fullName.trim()) newErrors.fullName = 'Nome completo é obrigatório.';
+      if (!email.trim()) newErrors.email = 'E-mail é obrigatório.';
+      else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Digite um e-mail válido.';
       if (!crm.trim()) newErrors.crm = 'CRM é obrigatório para médicos.';
       if (!specialties.trim()) newErrors.specialties = 'Especialidades são obrigatórias.';
+      if (!phone.trim()) newErrors.phone = 'Telefone é obrigatório.';
+      if (!password) newErrors.password = 'Senha é obrigatória.';
+      else if (password.length < 6) newErrors.password = 'Senha precisa ter no mínimo 6 caracteres.';
+      if (!passwordConfirm) newErrors.passwordConfirm = 'Confirme sua senha.';
+      else if (password !== passwordConfirm) newErrors.passwordConfirm = 'As senhas não coincidem.';
+      if (!termsAccepted) newErrors.termsAccepted = 'Você precisa aceitar os Termos e Serviços.';
     } else {
-      // hospital
-      if (!hospitalName.trim()) newErrors.hospitalName = 'Nome do hospital é obrigatório.';
+      if (!fantasyName.trim()) newErrors.fantasyName = 'Nome fantasia é obrigatório.';
+      if (!institutionalEmail.trim()) newErrors.institutionalEmail = 'E-mail institucional é obrigatório.';
+      else if (!/\S+@\S+\.\S+/.test(institutionalEmail)) newErrors.institutionalEmail = 'Digite um e-mail válido.';
+      if (!corporateName.trim()) newErrors.corporateName = 'Razão social é obrigatória.';
       if (!cnpj.trim()) newErrors.cnpj = 'CNPJ é obrigatório.';
       if (!address.trim()) newErrors.address = 'Endereço é obrigatório.';
+      if (!phone.trim()) newErrors.phone = 'Telefone é obrigatório.';
+      if (!password) newErrors.password = 'Senha é obrigatória.';
+      else if (password.length < 6) newErrors.password = 'Senha precisa ter no mínimo 6 caracteres.';
+      if (!passwordConfirm) newErrors.passwordConfirm = 'Confirme sua senha.';
+      else if (password !== passwordConfirm) newErrors.passwordConfirm = 'As senhas não coincidem.';
+      if (!termsAccepted) newErrors.termsAccepted = 'Você precisa aceitar os Termos e Serviços.';
     }
 
     setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
 
-    // Se sem erros, aqui você chamaria a API para criar o usuário
-    if (Object.keys(newErrors).length === 0) {
-      // Exemplo: chamada à API — adaptar conforme backend
-      const payload = {
-        role,
-        fullName,
-        email,
-        phone,
-        // campos dependentes
-        ...(role === 'doctor' ? { crm, specialties } : { hospitalName, cnpj, address }),
-      };
-      // demo
-      alert(`Registrando ${role === 'doctor' ? 'médico' : 'hospital'}: ${JSON.stringify(payload)}`);
+    const payload = role === 'doctor' ? {
+      role,
+      fullName,
+      email,
+      crm,
+      specialties: specialties.split(',').map(s => s.trim()),
+      phone,
+      password,
+    } : {
+      role,
+      fantasyName,
+      institutionalEmail,
+      corporateName,
+      cnpj,
+      cnes,
+      address,
+      institutionType,
+      phone,
+      password,
+      termsAccepted,
+    };
 
-      // Reset opcional
-      setFullName('');
-      setEmail('');
-      setPhone('');
-      setPassword('');
-      setCrm('');
-      setSpecialties('');
-      setHospitalName('');
-      setCnpj('');
-      setAddress('');
-      setErrors({});
-    }
+    alert(`Registrando ${role === 'doctor' ? 'médico' : 'hospital'}:\n${JSON.stringify(payload, null, 2)}`);
+
+    resetForm();
   };
 
   return (
-    <div className="register-page" role="main">
-      {/* Painel esquerdo: logotipo e ilustrações */}
-      <aside className="register-left" aria-label="Apresentação Med Hub">
-        <div className="register-left__content">
-          <h1 className="logo">Med Hub</h1>
-          <p className="tagline">Conectando profissionais e atendimentos com segurança.</p>
-
-          {/* Bolhas SVG animadas - decoração */}
-          <svg className="bubbles" viewBox="0 0 200 200" aria-hidden>
-            <circle className="bubble bubble--1" cx="40" cy="40" r="30" fill="#e6f7ee" />
-            <circle className="bubble bubble--2" cx="160" cy="30" r="18" fill="#dff3e6" />
-            <circle className="bubble bubble--3" cx="120" cy="140" r="24" fill="#cfead8" />
-          </svg>
-        </div>
+    <main className="register-container" role="main">
+      <aside className="register-image-side" aria-label="Apresentação Med Hub">
+        <h1 className="register-logo">Med Hub</h1>
+        <p className="register-tagline">
+          Conectando profissionais e atendimentos com segurança.
+        </p>
+        <div className="bubble bubble--small" aria-hidden="true"></div>
+        <div className="bubble bubble--medium" aria-hidden="true"></div>
+        <div className="bubble bubble--large" aria-hidden="true"></div>
       </aside>
 
-      {/* Painel direito: formulário */}
-      <section className="register-right" aria-label="Formulário de registro">
-        <form className="register-form" onSubmit={handleSubmit} noValidate>
-          <h2>Crie sua conta</h2>
+      <section className="register-form-side" aria-label="Formulário de registro">
+        <h2>Crie sua conta</h2>
 
-          {/* Role toggle: escolher entre Médico e Hospital */}
-          <fieldset className="role-fieldset" aria-label="Tipo de conta">
-            <legend className="visually-hidden">Tipo de conta</legend>
-            <div className="role-toggle" role="radiogroup" aria-label="Escolha entre médico ou hospital">
-              <label
-                className={`role-option ${role === 'doctor' ? 'active' : ''}`}
-                aria-pressed={role === 'doctor'}
-              >
-                <input
-                  type="radio"
-                  name="role"
-                  value="doctor"
-                  checked={role === 'doctor'}
-                  onChange={() => setRole('doctor')}
-                  aria-label="Sou médico"
-                />
-                Médico
-              </label>
+        <fieldset className="role-fieldset" aria-label="Tipo de conta">
+          <legend className="visually-hidden">Tipo de conta</legend>
+          <div role="radiogroup" aria-label="Escolha entre médico ou hospital" className="role-toggle no-border">
+            <label className={`role-option ${role === 'doctor' ? 'active' : ''}`} aria-pressed={role === 'doctor'}>
+              <input
+                type="radio"
+                name="role"
+                value="doctor"
+                checked={role === 'doctor'}
+                onChange={() => setRole('doctor')}
+                aria-label="Sou médico"
+              />
+              Médico
+            </label>
+            <label className={`role-option ${role === 'hospital' ? 'active' : ''}`} aria-pressed={role === 'hospital'}>
+              <input
+                type="radio"
+                name="role"
+                value="hospital"
+                checked={role === 'hospital'}
+                onChange={() => setRole('hospital')}
+                aria-label="Sou hospital"
+              />
+              Hospital
+            </label>
+          </div>
+        </fieldset>
 
-              <label
-                className={`role-option ${role === 'hospital' ? 'active' : ''}`}
-                aria-pressed={role === 'hospital'}
-              >
-                <input
-                  type="radio"
-                  name="role"
-                  value="hospital"
-                  checked={role === 'hospital'}
-                  onChange={() => setRole('hospital')}
-                  aria-label="Sou hospital"
-                />
-                Hospital
-              </label>
-            </div>
-          </fieldset>
+        <form onSubmit={handleSubmit} noValidate className={role === 'doctor' ? 'form-grid-two-cols' : ''}>
 
-          {/* Nome completo */}
-          <label htmlFor="fullName">Nome completo</label>
-          <input
-            id="fullName"
-            aria-label="Nome completo"
-            type="text"
-            value={fullName}
-            onChange={e => setFullName(e.target.value)}
-            className={errors.fullName ? 'input input--error' : 'input'}
-            placeholder="Seu nome completo"
-          />
-          {errors.fullName && <div className="input-error" role="alert">{errors.fullName}</div>}
-
-          {/* E-mail */}
-          <label htmlFor="email">E-mail</label>
-          <input
-            id="email"
-            aria-label="E-mail"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className={errors.email ? 'input input--error' : 'input'}
-            placeholder="seu@exemplo.com"
-          />
-          {errors.email && <div className="input-error" role="alert">{errors.email}</div>}
-
-          {/* Campos condicionais para Médico */}
+          {/* Médico */}
           {role === 'doctor' && (
             <>
+              <label htmlFor="fullName">Nome completo</label>
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                value={fullName}
+                placeholder="Seu nome completo"
+                onChange={e => setFullName(e.target.value)}
+                className={`input ${errors.fullName ? 'input--error' : ''}`}
+                aria-invalid={!!errors.fullName}
+                aria-describedby={errors.fullName ? 'fullName-error' : undefined}
+              />
+              {errors.fullName && <div className="input-error" id="fullName-error" role="alert">{errors.fullName}</div>}
+
+              <label htmlFor="email">E-mail</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={email}
+                placeholder="seu@exemplo.com"
+                onChange={e => setEmail(e.target.value)}
+                className={`input ${errors.email ? 'input--error' : ''}`}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? 'email-error' : undefined}
+              />
+              {errors.email && <div className="input-error" id="email-error" role="alert">{errors.email}</div>}
+
               <label htmlFor="crm">CRM (registro médico)</label>
               <input
                 id="crm"
-                aria-label="CRM"
                 type="text"
+                name="crm"
                 value={crm}
-                onChange={e => setCrm(e.target.value)}
-                className={errors.crm ? 'input input--error' : 'input'}
                 placeholder="Digite seu CRM"
+                onChange={e => setCrm(e.target.value)}
+                className={`input ${errors.crm ? 'input--error' : ''}`}
+                aria-invalid={!!errors.crm}
+                aria-describedby={errors.crm ? 'crm-error' : undefined}
               />
-              {errors.crm && <div className="input-error" role="alert">{errors.crm}</div>}
+              {errors.crm && <div className="input-error" id="crm-error" role="alert">{errors.crm}</div>}
 
               <label htmlFor="specialties">Especialidades</label>
               <input
                 id="specialties"
-                aria-label="Especialidades"
                 type="text"
+                name="specialties"
                 value={specialties}
-                onChange={e => setSpecialties(e.target.value)}
-                className={errors.specialties ? 'input input--error' : 'input'}
                 placeholder="Ex: Cardiologia, Pediatria"
+                onChange={e => setSpecialties(e.target.value)}
+                className={`input ${errors.specialties ? 'input--error' : ''}`}
+                aria-invalid={!!errors.specialties}
+                aria-describedby={errors.specialties ? 'specialties-error' : undefined}
               />
-              {errors.specialties && <div className="input-error" role="alert">{errors.specialties}</div>}
+              {errors.specialties && (
+                <div className="input-error" id="specialties-error" role="alert">
+                  {errors.specialties}
+                </div>
+              )}
+
+              <label htmlFor="phone">Telefone</label>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                value={phone}
+                placeholder="(XX) XXXXX-XXXX"
+                onChange={e => setPhone(e.target.value)}
+                className={`input ${errors.phone ? 'input--error' : ''}`}
+                aria-invalid={!!errors.phone}
+                aria-describedby={errors.phone ? 'phone-error' : undefined}
+              />
+              {errors.phone && <div className="input-error" id="phone-error" role="alert">{errors.phone}</div>}
+
+              <label htmlFor="password">Senha</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                value={password}
+                placeholder="Crie uma senha segura"
+                onChange={e => setPassword(e.target.value)}
+                className={`input ${errors.password ? 'input--error' : ''}`}
+                aria-invalid={!!errors.password}
+                aria-describedby={errors.password ? 'password-error' : undefined}
+              />
+              {errors.password && <div className="input-error" id="password-error" role="alert">{errors.password}</div>}
+
+              <label htmlFor="passwordConfirm">Confirmação de senha</label>
+              <input
+                id="passwordConfirm"
+                type="password"
+                name="passwordConfirm"
+                value={passwordConfirm}
+                placeholder="Digite sua senha novamente"
+                onChange={e => setPasswordConfirm(e.target.value)}
+                className={`input ${errors.passwordConfirm ? 'input--error' : ''}`}
+                aria-invalid={!!errors.passwordConfirm}
+                aria-describedby={errors.passwordConfirm ? 'passwordConfirm-error' : undefined}
+              />
+              {errors.passwordConfirm && (
+                <div className="input-error" id="passwordConfirm-error" role="alert">
+                  {errors.passwordConfirm}
+                </div>
+              )}
+
+              <div className="terms-container">
+                <input
+                  type="checkbox"
+                  id="termsAccepted"
+                  name="termsAccepted"
+                  checked={termsAccepted}
+                  onChange={e => setTermsAccepted(e.target.checked)}
+                  aria-invalid={!!errors.termsAccepted}
+                />
+                <label htmlFor="termsAccepted" className="terms-label">
+                  Aceito os{' '}
+                  <a href="/termos-de-servico" target="_blank" rel="noopener noreferrer" className="terms-link">
+                    Termos e Serviços
+                  </a>{' '}
+                  e concordo com a{' '}
+                  <a href="/politica-de-privacidade" target="_blank" rel="noopener noreferrer" className="terms-link">
+                    Política de Privacidade
+                  </a>.
+                </label>
+              </div>
+              {errors.termsAccepted && (
+                <div className="input-error" role="alert">
+                  {errors.termsAccepted}
+                </div>
+              )}
+
+              <p className="lgpd-notice" role="note">
+                Respeitamos e protegemos todos os seus dados pessoais conforme a LGPD.
+              </p>
             </>
           )}
 
-          {/* Campos condicionais para Hospital */}
+          {/* Hospital */}
           {role === 'hospital' && (
             <>
-              <label htmlFor="hospitalName">Nome do Hospital</label>
+              <label htmlFor="fantasyName">Nome fantasia</label>
               <input
-                id="hospitalName"
-                aria-label="Nome do hospital"
+                id="fantasyName"
+                name="fantasyName"
                 type="text"
-                value={hospitalName}
-                onChange={e => setHospitalName(e.target.value)}
-                className={errors.hospitalName ? 'input input--error' : 'input'}
-                placeholder="Nome do hospital"
+                value={fantasyName}
+                placeholder="Nome fantasia do hospital"
+                onChange={e => setFantasyName(e.target.value)}
+                className={`input ${errors.fantasyName ? 'input--error' : ''}`}
+                aria-invalid={!!errors.fantasyName}
+                aria-describedby={errors.fantasyName ? 'fantasyName-error' : undefined}
               />
-              {errors.hospitalName && <div className="input-error" role="alert">{errors.hospitalName}</div>}
+              {errors.fantasyName && <div className="input-error" id="fantasyName-error" role="alert">{errors.fantasyName}</div>}
+
+              <label htmlFor="institutionalEmail">E-mail institucional</label>
+              <input
+                id="institutionalEmail"
+                type="email"
+                name="institutionalEmail"
+                value={institutionalEmail}
+                placeholder="email@hospital.com"
+                onChange={e => setInstitutionalEmail(e.target.value)}
+                className={`input ${errors.institutionalEmail ? 'input--error' : ''}`}
+                aria-invalid={!!errors.institutionalEmail}
+                aria-describedby={errors.institutionalEmail ? 'institutionalEmail-error' : undefined}
+              />
+              {errors.institutionalEmail && <div className="input-error" id="institutionalEmail-error" role="alert">{errors.institutionalEmail}</div>}
+
+              <label htmlFor="corporateName">Razão social</label>
+              <input
+                id="corporateName"
+                name="corporateName"
+                type="text"
+                value={corporateName}
+                placeholder="Razão social"
+                onChange={e => setCorporateName(e.target.value)}
+                className={`input ${errors.corporateName ? 'input--error' : ''}`}
+                aria-invalid={!!errors.corporateName}
+                aria-describedby={errors.corporateName ? 'corporateName-error' : undefined}
+              />
+              {errors.corporateName && <div className="input-error" id="corporateName-error" role="alert">{errors.corporateName}</div>}
 
               <label htmlFor="cnpj">CNPJ</label>
               <input
                 id="cnpj"
-                aria-label="CNPJ"
                 type="text"
+                name="cnpj"
                 value={cnpj}
-                onChange={e => setCnpj(e.target.value)}
-                className={errors.cnpj ? 'input input--error' : 'input'}
                 placeholder="00.000.000/0000-00"
+                onChange={e => setCnpj(e.target.value)}
+                className={`input ${errors.cnpj ? 'input--error' : ''}`}
+                aria-invalid={!!errors.cnpj}
+                aria-describedby={errors.cnpj ? 'cnpj-error' : undefined}
               />
-              {errors.cnpj && <div className="input-error" role="alert">{errors.cnpj}</div>}
+              {errors.cnpj && <div className="input-error" id="cnpj-error" role="alert">{errors.cnpj}</div>}
+
+              <label htmlFor="cnes">CNES (opcional)</label>
+              <input
+                id="cnes"
+                name="cnes"
+                type="text"
+                value={cnes}
+                placeholder="Cadastro Nacional de Estabelecimentos de Saúde"
+                onChange={e => setCnes(e.target.value)}
+                className="input"
+                aria-invalid={false}
+              />
 
               <label htmlFor="address">Endereço</label>
               <input
                 id="address"
-                aria-label="Endereço"
+                name="address"
                 type="text"
                 value={address}
-                onChange={e => setAddress(e.target.value)}
-                className={errors.address ? 'input input--error' : 'input'}
                 placeholder="Rua, número, bairro, cidade"
+                onChange={e => setAddress(e.target.value)}
+                className={`input ${errors.address ? 'input--error' : ''}`}
+                aria-invalid={!!errors.address}
+                aria-describedby={errors.address ? 'address-error' : undefined}
               />
-              {errors.address && <div className="input-error" role="alert">{errors.address}</div>}
+              {errors.address && <div className="input-error" id="address-error" role="alert">{errors.address}</div>}
+
+              <label htmlFor="phone">Telefone</label>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                value={phone}
+                placeholder="(XX) XXXXX-XXXX"
+                onChange={e => setPhone(e.target.value)}
+                className={`input ${errors.phone ? 'input--error' : ''}`}
+                aria-invalid={!!errors.phone}
+                aria-describedby={errors.phone ? 'phone-error' : undefined}
+              />
+              {errors.phone && <div className="input-error" id="phone-error" role="alert">{errors.phone}</div>}
+
+              <label htmlFor="institutionType">Tipo de instituição</label>
+              <select
+                id="institutionType"
+                name="institutionType"
+                value={institutionType}
+                onChange={e => setInstitutionType(e.target.value as 'public' | 'private')}
+                className="input"
+                aria-invalid={false}
+              >
+                <option value="public">Pública</option>
+                <option value="private">Privada</option>
+              </select>
+
+              <label htmlFor="password">Senha</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                value={password}
+                placeholder="Crie uma senha segura"
+                onChange={e => setPassword(e.target.value)}
+                className={`input ${errors.password ? 'input--error' : ''}`}
+                aria-invalid={!!errors.password}
+                aria-describedby={errors.password ? 'password-error' : undefined}
+              />
+              {errors.password && <div className="input-error" id="password-error" role="alert">{errors.password}</div>}
+
+              <label htmlFor="passwordConfirm">Confirmação de senha</label>
+              <input
+                id="passwordConfirm"
+                type="password"
+                name="passwordConfirm"
+                value={passwordConfirm}
+                placeholder="Digite sua senha novamente"
+                onChange={e => setPasswordConfirm(e.target.value)}
+                className={`input ${errors.passwordConfirm ? 'input--error' : ''}`}
+                aria-invalid={!!errors.passwordConfirm}
+                aria-describedby={errors.passwordConfirm ? 'passwordConfirm-error' : undefined}
+              />
+              {errors.passwordConfirm && (
+                <div className="input-error" id="passwordConfirm-error" role="alert">
+                  {errors.passwordConfirm}
+                </div>
+              )}
+
+              <div className="terms-container">
+                <input
+                  type="checkbox"
+                  id="termsAccepted"
+                  name="termsAccepted"
+                  checked={termsAccepted}
+                  onChange={e => setTermsAccepted(e.target.checked)}
+                  aria-invalid={!!errors.termsAccepted}
+                />
+                <label htmlFor="termsAccepted" className="terms-label">
+                  Aceito os{' '}
+                  <a href="/termos-de-servico" target="_blank" rel="noopener noreferrer" className="terms-link">
+                    Termos e Serviços
+                  </a>{' '}
+                  e concordo com a{' '}
+                  <a href="/politica-de-privacidade" target="_blank" rel="noopener noreferrer" className="terms-link">
+                    Política de Privacidade
+                  </a>.
+                </label>
+              </div>
+              {errors.termsAccepted && (
+                <div className="input-error" role="alert">
+                  {errors.termsAccepted}
+                </div>
+              )}
+
+              <p className="lgpd-notice" role="note">
+                Respeitamos e protegemos todos os seus dados pessoais conforme a LGPD.
+              </p>
             </>
           )}
 
-          {/* Telefone */}
-          <label htmlFor="phone">Telefone</label>
-          <input
-            id="phone"
-            aria-label="Telefone"
-            type="tel"
-            value={phone}
-            onChange={e => setPhone(e.target.value)}
-            className={errors.phone ? 'input input--error' : 'input'}
-            placeholder="(XX) XXXXX-XXXX"
-          />
-          {errors.phone && <div className="input-error" role="alert">{errors.phone}</div>}
-
-          {/* Senha */}
-          <label htmlFor="password">Senha</label>
-          <input
-            id="password"
-            aria-label="Senha"
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            className={errors.password ? 'input input--error' : 'input'}
-            placeholder="Crie uma senha segura"
-          />
-          {errors.password && <div className="input-error" role="alert">{errors.password}</div>}
-
-          {/* Botão registrar */}
           <div className="actions">
             <button type="submit" className="btn-register" aria-label="Registrar">
               Registrar
             </button>
           </div>
-
-          {/* Link para Login desalinhado (abaixo do botão) */}
-          <div className="already">
-            Já tem conta? <Link to="/login" className="link-login">Entre aqui</Link>
-          </div>
         </form>
+
+        <div className="already">
+          Já tem conta?{' '}
+          <Link to="/login" className="link-login">
+            Entre aqui
+          </Link>
+        </div>
+
+        <p className="support-text">
+          Enfrentando algum problema?{' '}
+          <a href="mailto:medhubservices@capybaraholding.com.br" className="support-link">
+            medhubservices@capybaraholding.com.br
+          </a>
+        </p>
+
+        {/* Importante:
+          Nota para futuro: A conta do hospital só deve ser ativada após verificação de veracidade dos dados.
+          No perfil, após ativação, será necessário cadastrar representante legal / responsável técnico com validação.
+        */}
       </section>
-    </div>
+    </main>
   );
 }

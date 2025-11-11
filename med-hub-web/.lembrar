@@ -1,8 +1,8 @@
 blanch feature/backend-signup-lgpd
 blanch main
 
-caminho pasta: med-hub-web/shift-manager-backend
-
+caminho pasta: med-hub-web/backend
+ 
 codigo: git checkout ( ou switch) f..."continua"
 
 */ DATABASE_URL=postgresql://vihisantos:631330@localhost:5432/medhubdb?schema=public
