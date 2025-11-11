@@ -6,9 +6,9 @@
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "typeRoots": ["./src/types","./node_module/@types"],
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src"]
 }

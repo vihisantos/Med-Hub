@@ -14,6 +14,7 @@ app.use(cors());
 app.use(helmet());
 app.use(bodyParser.json());
 app.set('trust proxy', 'loopback');
+
 app.use(
   rateLimit({
     windowMs: 60 * 1000,
